@@ -519,3 +519,7 @@ Then('In the Scripts tab, select the script created previously', async() => {
   console.log(newScriptForCalendar + 'script selected');
 });
 
+When('user logout from the platform',async()=>{
+  await scriptBuilder.platformLogout();
+});
+

@@ -191,3 +191,55 @@ When('user search for calendar {string}', async(calendar) => {
 When('user validate that the scheduled reservation is correctly displayed on the calendar', async() => {
   await calendarManager.validateReservation();
 });
+
+When('select the {string} profile', async(profileAccess)=>{
+  await calendarManager.clickProfileSelect();
+  await calendarManager.inputProfileSelect(profileAccess);
+});
+
+When('on the section Calendar Permissions, configure the following data',async (table) => {
+  const calenderPermissions = table.rowsHash();
+  await calendarManager.setCalendarPermissions(calenderPermissions);
+});
+
+When('user save the changes', async()=>{
+  await calendarManager.saveSetting();
+});
+
+Then('user select the reservation previously made', async() => {
+  await calendarManager.selectPreviousReservation();
+});
+
+When('validate that the Supervisor is able to delete the reservation', async() => {
+  await calendarManager.validateDeleteButton();
+});
+
+Then('user select the delete option', async() => {
+  await calendarManager.deleteReservation();
+})
+
+When('validate that the scheduled reservation previously made is not displayed on the calendar', async() => {
+  await calendarManager.validateDeletedReservation();
+})
+
+Then('user navigate to wallborad', async() => {
+  await calendarManager.navigateWallboard();
+})
+
+Then('user selects the template {string}', async(template) => {
+  await calendarManager.selectTemplate(template);
+})
+
+When('In Outbound section, verify the following data:', async(datatable) => {
+  let wallboardData = '';
+  datatable.hashes().forEach((element) => {
+    
+    wallboardData = {
+      agentsReady: element.agentsReady,
+      agentsTalking: element.agentsTalking,
+      agentsOutcomes: element.agentsOutcomes,
+      agentsBreaks: element.agentsBreaks
+    };
+  });
+  await calendarManager.verifyOutboundSectionData(wallboardData);
+})

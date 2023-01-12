@@ -28,7 +28,7 @@ exports.ScriptBuilder = class ScriptBuilder extends BaseAction {
       warningCloseButton: '[id="closeAlert"]',
       defaultPageName: '[id="new-script-page-name-input"]',
       createButton: '[id="create_new_script_btn"]',
-      agent:'div[id="s2id_new_script_agents_selector"] ul li input'
+      agent: 'div[id="s2id_new_script_agents_selector"] ul li input'
     },
     Popup: '(//div[@id="newContentdiv"])[last()]//p',
     generalRulesModal: '[id="scriptmanager-general-rules-btn"]>a>span',
@@ -213,7 +213,10 @@ exports.ScriptBuilder = class ScriptBuilder extends BaseAction {
     startDate: '#new-script-start-date-input',
     endDate: '#new-script-end-date-input',
     textinput: '//div[@id="voice-script-container"]/div[contains(@id,"multi_script") and not (@style ="display: none;")]//div[contains(@class,"current-script-page-div")]//input',
-    calendarElementOnVoice: '(//div[@data-type="scheduler"]//button)[last()]'
+    calendarElementOnVoice: '(//div[@data-type="scheduler"]//button)[last()]',
+    logout:'#main-logout',
+    confirmLogout: '[id="bot2-Msg1"]',
+    
   };
 
 
@@ -725,7 +728,7 @@ exports.ScriptBuilder = class ScriptBuilder extends BaseAction {
   async selectScript(scriptName) {
     await this.mouseOver(this.elements.selectScript);
     await this.waitForSelector(this.elements.selectScript);
-    if(await this.isVisible(this.elements.selectScript)){
+    if (await this.isVisible(this.elements.selectScript)) {
       await this.dropdownOptionSelect(this.elements.selectScript, scriptName);
     }
   }
@@ -984,7 +987,7 @@ exports.ScriptBuilder = class ScriptBuilder extends BaseAction {
       const locator = `//span[text()='${inputDetails.validation}']`;
       await this.click(locator);
     }
-    if(inputDetails.script){
+    if (inputDetails.script) {
       const scriptData = await this.readCsv(inputDetails.script);
       await this.clearField(this.elements.scriptText);
       await this.type(this.elements.scriptText, scriptData.toString());
@@ -1275,7 +1278,7 @@ exports.ScriptBuilder = class ScriptBuilder extends BaseAction {
    * @return {void} Nothing
    */
   async selectScriptInVoiceChannel(scriptName) {
-    if(await this.isVisible(this.elements.selectScriptVoiceChannel)){
+    if (await this.isVisible(this.elements.selectScriptVoiceChannel)) {
       await this.mouseOver(this.elements.selectScriptVoiceChannel);
       await this.waitForSelector(this.elements.selectScriptVoiceChannel);
       await this.dropdownOptionSelect(
@@ -1352,16 +1355,16 @@ exports.ScriptBuilder = class ScriptBuilder extends BaseAction {
    * @param {string} itemConfigurations.requiredBooking - element calendar booking
    * @return {void} Nothing
    */
-   async calendarItems(itemConfigurations) {
+  async calendarItems(itemConfigurations) {
     await this.waitForSelector(this.elements.calendarTitle);
     await this.clearField(this.elements.calendarTitle);
-    await this.type(this.elements.calendarTitle,itemConfigurations.title);
+    await this.type(this.elements.calendarTitle, itemConfigurations.title);
     await this.clearField(this.elements.calendarName);
-    await this.type(this.elements.calendarName,itemConfigurations.calendarName);
+    await this.type(this.elements.calendarName, itemConfigurations.calendarName);
     await this.pressKey('Enter');
     await this.selectOptionByText(this.elements.requiredBooking, itemConfigurations.requiredBooking);
     await this.click(this.elements.saveEdits);
-   }
+  }
   /**
    * function to select recording buttons
    * @param {string} recordingButton - recordingButton
@@ -1610,9 +1613,9 @@ exports.ScriptBuilder = class ScriptBuilder extends BaseAction {
    * @return {void} Nothing
    */
   async selectCalendarElement() {
-    if(await this.isVisible(this.elements.calendarElement)){
+    if (await this.isVisible(this.elements.calendarElement)) {
       await this.click(this.elements.calendarElement);
-    }else{
+    } else {
       await this.wait(5);//load calendar element
       await this.waitForSelector(this.elements.calendarElementOnVoice);
       await this.click(this.elements.calendarElementOnVoice);
@@ -1628,14 +1631,14 @@ exports.ScriptBuilder = class ScriptBuilder extends BaseAction {
    */
   async bookEvent(hour, desc, days) {
     await this.click(this.elements.selectDay);
-    if(days === 'month'){
-      days = dayjs().daysInMonth() +1;
+    if (days === 'month') {
+      days = dayjs().daysInMonth() + 1;
     }
-    if(days === 'week'){
+    if (days === 'week') {
       await this.click(this.elements.selectWeek);
       days = 1;
     }
-    for(let i=1; i<=days; i++){
+    for (let i = 1; i <= days; i++) {
       await this.click(this.elements.clickNext);
     }
     await this.click(`[data-time="${hour}:00:00"]`);
@@ -1667,7 +1670,7 @@ exports.ScriptBuilder = class ScriptBuilder extends BaseAction {
    * @param {string} message- error message
    * @return {void} Nothing
    */
-  async validateFormError(message){
+  async validateFormError(message) {
     await this.waitForSelector(this.elements.validationError);
     await this.shouldContainText(this.elements.validationError, message);
   }
@@ -1679,8 +1682,19 @@ exports.ScriptBuilder = class ScriptBuilder extends BaseAction {
   * @returns {void} nothing
   */
   async fillScript(fillScriptObject) {
-    if(fillScriptObject.textinput){
-      await this.type(this.elements.textinput,fillScriptObject.textinput);
+    if (fillScriptObject.textinput) {
+      await this.type(this.elements.textinput, fillScriptObject.textinput);
     }
+  }
+
+  /**
+   * function to logout from the platform
+   * @return {void} Nothing
+   */
+  async platformLogout() {
+    await this.waitForSelector(this.elements.logout);
+    await this.click(this.elements.logout);
+    await this.waitForSelector(this.elements.confirmLogout);
+    await this.click(this.elements.confirmLogout);
   }
 };

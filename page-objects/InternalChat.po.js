@@ -36,6 +36,8 @@ exports.InternalChat = class InternalChat extends BaseAction {
     await this.click(this.elements.sidePanelExpandMenu);
     await this.click(this.elements.adminToolsMenu);
     await this.click(this.elements.profileManagerButton);
+    await this.click(this.elements.adminToolsMenu);
+    await this.click(this.elements.sidePanelExpandMenu);
   }
 
   /**
