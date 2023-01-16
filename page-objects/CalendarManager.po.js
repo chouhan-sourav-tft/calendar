@@ -64,7 +64,7 @@ exports.CalendarManager = class CalendarManager extends BaseAction {
     bookedHours: '#calendar-monitor-table tbody td:nth-child(4)',
     availableHours: '#calendar-monitor-table tbody td:nth-child(5)',
     percentageOccupied: '#calendar-monitor-table tbody td:nth-child(6)',
-    slotErrorPopUp: '//div[@id="newContentdiv"]/p[contains(text(),"Without available events for booking in the chosen schedule.")]',
+    slotErrorPopUp:'//div[@id="newContentdiv"]/p[contains(text(),"Without available events for booking in the chosen schedule.")]',
     calendarSearchVisualization: 'input[name="calendars_filter"]',
     selectDay: '[class="fc-resourceTimeGridDay-button fc-button fc-button-primary"]',
     clickNext: '[aria-label="next"]',
@@ -72,31 +72,8 @@ exports.CalendarManager = class CalendarManager extends BaseAction {
     selectToday: '.fc-today-button',
     campaignSection: '#owners_div #s2id_campaigns_select',
     inputText: '#select2-drop input',
-    scriptTagCalendarButton: '(//form//button[contains(@class,"calendar-btn-link")])[last()]',
-    visualizationTab: '#calendar_btn_tab3',
-    verifyReservation: '[class="fc-time-grid-event fc-event fc-start fc-end preparation-times fc-draggable fc-resizable"]',
-    calendarElement: 'div[class="item form-group scheduler_class sortable ui-draggable element"]',
-    calendarSearchBox: 'input[name="calendars_filter"]',
-    profileSelect: '#s2id_access-level-list',
-    inputProfileSelect: '#s2id_autogen5_search',
-    deleteReservation: '//span[contains(text(),"Delete Reservations")]//preceding-sibling::i',
-    editReservation: '//span[contains(text(),"Edit Reservations")]//preceding-sibling::i',
-    editAndCloseReservation: '//span[contains(text(),"Edit and Close Reservations")]//preceding-sibling::i',
-    previousReservation: '[class="fc-time-grid-event fc-event fc-start fc-end preparation-times"]',
-    deleteButton: '[id="reservation-delete-step"]',
-    confirmDeleteReservation: '[id="reservation-delete"]',
-    validateNoReservation: '[class="fc-event-container"]',
-    realTimeToolMenu: '//a[@id="menu_0"]',
-    wallboardMenu: '//a[@id="menu_15"]',
-    templateSection: '[id="s2id_template-list"]',
-    readyAgents: '//div[@class="frame-box frame-box margin-wb col-xs-6"]//div[@class="progress-bar bg-color-greenLight"]',
-    talkingAgents: '//div[@class="frame-box frame-box margin-wb col-xs-6"]//div[@class="progress-bar bg-color-yellow"]',
-    outcomesAgents: '//div[@class="frame-box frame-box margin-wb col-xs-6"]//div[@class="progress-bar bg-color-redLight"]',
-    breaksAgents: '//div[@class="frame-box frame-box margin-wb col-xs-6"]//div[@class="progress-bar bg-color-blue"]'
-
-
-
-
+    inboundQueue: '#s2id_queues_select input',
+    sidePanelExpandMenu: '#left-panel .minifyme',
   };
 
   /**
@@ -104,10 +81,16 @@ exports.CalendarManager = class CalendarManager extends BaseAction {
    * @return {void} Nothing
    */
   async navigateToCalendarManagerMenu() {
-    await this.mouseOver(this.elements.calendarMainMenu);
+    await this.waitForSelector(this.elements.sidePanelExpandMenu);
+    await this.click(this.elements.sidePanelExpandMenu);
+    await this.waitForSelector(this.elements.calendarMainMenu);
+    if(!(await this.isVisible(this.elements.calendarManagerMenu))){
+      await this.click(this.elements.calendarMainMenu);
+    }
     await this.waitForSelector(this.elements.calendarManagerMenu);
     await this.click(this.elements.calendarManagerMenu);
     await this.waitForSelector(this.elements.calendarTab);
+    await this.click(this.elements.sidePanelExpandMenu);
   }
 
   /**
@@ -117,7 +100,6 @@ exports.CalendarManager = class CalendarManager extends BaseAction {
    */
   async selectTab(tabName) {
     let tabLocator = `span[data-translate='calendarManager.tab.${tabName}']`;
-    console.log('tabLocator=', tabLocator);
     await this.waitForSelector(tabLocator);
     await this.click(tabLocator);
   }
@@ -241,7 +223,7 @@ exports.CalendarManager = class CalendarManager extends BaseAction {
     await this.click(this.elements.calendarEndTimeTextBox);
     await this.type(this.elements.calendarEndTimeTextBox, calendarData.endTime);
     await this.click(this.elements.calendarEventsTextBox);
-    await this.type(this.elements.calendarEventsTextBox, calendarData.eventName);
+    await this.type(this.elements.calendarEventsTextBox,calendarData.eventName);
     await this.pressKey('Enter');
     await this.click(this.elements.calendarSaveButton);
     await this.waitForSelector(this.elements.calendarSaveModal);
@@ -382,11 +364,19 @@ exports.CalendarManager = class CalendarManager extends BaseAction {
       calendarDetails.endDate = await dayjs().add(1, 'day').format('YYYY-MM-DD');
     }
     //wait for page to load
-    await this.wait(2);
+    await this.wait(5);
     if (calendarDetails.ownerType) {
       let locator = `//div[@id='owner_radio_div']//span[text()='${calendarDetails.ownerType}']`;
       await this.waitForSelector(locator);
       await this.click(locator);
+    }
+    if (calendarDetails.inboundQueue) {
+      await this.waitForSelector(this.elements.inboundQueue);
+      await this.type(
+        this.elements.inboundQueue,
+        calendarDetails.inboundQueue
+      );
+      await this.pressKey('Enter');
     }
     if (calendarDetails.ticketQueue) {
       await this.waitForSelector(this.elements.ticketQueue);
@@ -422,6 +412,8 @@ exports.CalendarManager = class CalendarManager extends BaseAction {
         }
       }
     }
+
+
     await this.waitForSelector(this.elements.searchButton);
     await this.forceClick(this.elements.searchButton);
   }
@@ -476,32 +468,30 @@ exports.CalendarManager = class CalendarManager extends BaseAction {
         calendarDetails.bookedHours
       );
     }
-    if (calendarDetails.percentOccupied) {
-      await this.shouldContainText(
-        this.elements.percentageOccupied,
-        calendarDetails.percentOccupied
-      );
-    }
-    // if (calendarDetails.percentOccupied) {
-    //   let po = calendarDetails.percentOccupied + '0.01';
-    //   await this.shouldContainText(
-    //     this.elements.percentageOccupied,
-    //     po
-    //   );
-    // }
     if (calendarDetails.availableHours) {
+      if(calendarDetails.availableHours === 'month'){
+        calendarDetails.availableHours = dayjs().daysInMonth() * 11 - (calendarDetails.bookings*0.5);
+        calendarDetails.availableHours = await this.convertDecimalTime(calendarDetails.availableHours);
+      }else if(calendarDetails.availableHours === 'next month'){
+        calendarDetails.availableHours = dayjs().add(1, 'month').daysInMonth() * 11 - (calendarDetails.bookings*0.5);
+        calendarDetails.availableHours = await this.convertDecimalTime(calendarDetails.availableHours);
+      }
       await this.shouldContainText(
         this.elements.availableHours,
         calendarDetails.availableHours
       );
     }
-    // if (calendarDetails.availableHours) {
-    //   let av = calendarDetails.availableHours - '33:00:00';
-    //   await this.shouldContainText(
-    //     this.elements.availableHours,
-    //     av
-    //   );
-    // }
+    if (calendarDetails.percentOccupied) {
+      if(calendarDetails.percentOccupied === 'month'){
+        calendarDetails.percentOccupied = (((calendarDetails.bookings*0.5) /(dayjs().daysInMonth() * 11))*100).toFixed(2);
+      }else if(calendarDetails.percentOccupied === 'next month'){
+        calendarDetails.percentOccupied =(((calendarDetails.bookings*0.5) /(dayjs().add(1, 'month').daysInMonth() * 11))*100).toFixed(2);
+      }
+      await this.shouldContainText(
+        this.elements.percentageOccupied,
+        calendarDetails.percentOccupied
+      );
+    }
   }
 
   /**
@@ -510,7 +500,7 @@ exports.CalendarManager = class CalendarManager extends BaseAction {
    * @param {string} days - number of days from today
    * @return {void} Nothing
    */
-  async selectSlotAndVerifyError(hour, days) {
+  async selectSlotAndVerifyError(hour,days) {
     await this.click(this.elements.selectDay);
     if (days === 'month') {
       days = dayjs().daysInMonth() + 1;
@@ -520,10 +510,10 @@ exports.CalendarManager = class CalendarManager extends BaseAction {
     }
     await this.click(`[data-time="${hour}:00:00"]`);
     await this.waitForSelector(this.elements.slotErrorPopUp);
-    let errorPopUp = await this.isVisible(this.elements.slotErrorPopUp);
+    let errorPopUp=await this.isVisible(this.elements.slotErrorPopUp);
     await assert.isTrue(errorPopUp);
   }
-
+  
   /**
    * function to search reservation calendar
    * @param {string} calendarName - calendar name
@@ -545,198 +535,18 @@ exports.CalendarManager = class CalendarManager extends BaseAction {
    */
   async validateScheduledReservation(reservationData) {
     await this.click(this.elements.selectDay);
-    if (reservationData.days === 'month') {
-      reservationData.days = dayjs().daysInMonth() + 1;
+    if(reservationData.days === 'month'){
+      reservationData.days = dayjs().daysInMonth() +1;
     }
-    if (reservationData.days === 'week') {
+    if(reservationData.days === 'week'){
       await this.click(this.elements.selectWeek);
       reservationData.days = 1;
     }
-    for (let i = 1; i <= (reservationData.days); i++) {
+    for(let i=1; i<=(reservationData.days); i++){
       await this.click(this.elements.clickNext);
     }
     await this.isVisible(`[class='fc-event-container']>a div[data-start="${reservationData.hour}:00"]`);
     await this.click(this.elements.selectToday);
     await this.click(this.elements.selectWeek);
-    await this.clearField(this.elements.calendarSearchVisualization);
   }
-
-  /**
-   * function to select calendar element
-   * @return {void} Nothing
-   */
-  async selectCalendarElement() {
-    await this.waitForSelector(this.elements.calendarElement);
-    await this.click(this.elements.calendarElement);
-  }
-
-  /**
-  * function to select calendar element
-  * @return {void} Nothing
-  */
-  async clickScriptTagCalendar() {
-    await this.waitForSelector(this.elements.scriptTagCalendarButton);
-    await this.click(this.elements.scriptTagCalendarButton);
-  };
-
-  /**
-  * function to select calendar element
-  * @return {void} Nothing
-  */
-  async clickVisualizationTab() {
-    await this.click(this.elements.visualizationTab);
-  };
-
-  async searchCalendarBox() {
-    await this.waitForSelector(this.elements.calendarSearchBox);
-    await this.click(this.elements.calendarSearchBox);
-  }
-
-  /**
-  * function to select type of profile
-  * @return {void} Nothing
-  */
-  async clickProfileSelect() {
-    await this.waitForSelector(this.elements.profileSelect);
-    await this.click(this.elements.profileSelect);
-  }
-
-  /**
-  * function to select type of profile
-  * @param {string} profileAccess - profile type
-  * @return {void} Nothing
-  */
-  async inputProfileSelect(profileAccess) {
-    await this.wait(5);
-    await this.waitForSelector(this.elements.inputProfileSelect);
-    await this.type(this.elements.inputProfileSelect, profileAccess);
-    await this.pressKey('Enter');
-  }
-
-  /**
-  * function to set calendar permissions
-  * @param {string} calenderPermissions - calendar permissions
-  * @param {string} calenderPermissions.DeleteReservation - DeleteReservations
-  * @param {string} calenderPermissions.EditReservation - EditReservations
-  * @param {string} calenderPermissions.EditAndCloseReservation - EditAndCloseReservations
-  * @return {void} Nothing
-  */
-  async setCalendarPermissions(calenderPermissions) {
-    await this.waitForSelector(this.elements.deleteReservation);
-    if (await this.checkCheckbosIsChecked(this.elements.deleteReservation)) {
-      await this.checkBox(this.elements.deleteReservation)
-    }
-
-    await this.waitForSelector(this.elements.editReservation);
-    if (await this.checkCheckbosIsChecked(this.elements.editReservation)) {
-      await this.checkBox(this.elements.editReservation)
-    }
-
-    await this.waitForSelector(this.elements.editAndCloseReservation);
-    if (await this.checkCheckbosIsChecked(this.elements.editAndCloseReservation)) {
-      await this.checkBox(this.elements.editAndCloseReservation)
-    }
-
-    if (calenderPermissions.deleteReservation) {
-      await this.waitForSelector(this.elements.deleteReservation)
-      await this.checkBox(this.elements.deleteReservation)
-    }
-
-    if (calenderPermissions.editReservation) {
-      await this.waitForSelector(this.elements.editReservation)
-      await this.checkBox(this.elements.editReservation)
-    }
-
-    if (calenderPermissions.editAndCloseReservation) {
-      await this.waitForSelector(this.elements.editAndCloseReservation)
-      await this.checkBox(this.elements.editAndCloseReservation)
-    }
-  }
-
-  /**
-  * function to save settings
-  * @return {void} Nothing
-  */
-  async saveSetting() {
-    await this.click(this.elements.saveSettingButton);
-  }
-
-  /**
-  * function to select previous Reservation
-  * @return {void} Nothing
-  */
-  async selectPreviousReservation() {
-    await this.waitForSelector(this.elements.previousReservation)
-    await this.click(this.elements.previousReservation);
-  }
-
-  /**
-  * function to validate delete button
-  * @return {void} Nothing
-  */
-  async validateDeleteButton() {
-    await this.waitForSelector(this.elements.deleteButton)
-    await this.isVisible(this.elements.deleteButton);
-  }
-
-  /**
-  * function to delete Reservation
-  * @return {void} Nothing
-  */
-  async deleteReservation() {
-    await this.waitForSelector(this.elements.deleteButton)
-    await this.click(this.elements.deleteButton);
-    await this.waitForSelector(this.elements.confirmDeleteReservation)
-    await this.click(this.elements.confirmDeleteReservation);
-  }
-
-  /**
-  * function to validate no reservation displayed
-  * @return {void} Nothing
-  */
-  async validateDeletedReservation() {
-    await this.waitForSelector(this.elements.validateNoReservation);
-    await this.isVisible(this.elements.validateNoReservation);
-  }
-
-  /**
-  * function to navigate wallboard
-  * @return {void} Nothing
-  */
-  async navigateWallboard() {
-    await this.mouseOver(this.elements.realTimeToolMenu);
-    await this.waitForSelector(this.elements.wallboardMenu);
-    await this.click(this.elements.wallboardMenu);
-  }
-
-  /**
-  * function to click template_1
-  * @return {void} Nothing
-  */
-  async selectTemplate(template) {
-    await this.waitForSelector(this.elements.templateSection);
-    await this.click(this.elements.templateSection);
-    let locator = `//div[contains(text(), "${template}")]`
-    await this.waitForSelector(locator);
-    await this.click(locator);
-  }
-
-  /**
-   * function to verify outboundCampaign Data
-   * @param {object} wallboardData - data of wallboard
-   * @param {string} wallboardData.agentsReady - Outbound ready agents
-   * @param {string} wallboardData.agentsTalking - Outbound talking agents
-   * @param {string} wallboardData.agentsOutcomes - Outbound outcomes agents
-   * @param {string} wallboardData.agentsBreaks - Outbound breaks agents
-   * @return {void} Nothing
-   */
-  async verifyOutboundSectionData(wallboardData) {
-    await this.waitForSelector(this.elements.readyAgents);
-    await this.shouldContainText(this.elements.readyAgents, wallboardData.agentsReady);
-    await this.shouldContainText(this.elements.talkingAgents, wallboardData.agentsTalking);
-    await this.shouldContainText(this.elements.outcomesAgents, wallboardData.agentsOutcomes);
-    await this.shouldContainText(this.elements.breaksAgents, wallboardData.agentsBreaks);
-  }
-
-
 };

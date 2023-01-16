@@ -51,7 +51,7 @@ exports.ticketsOnline = class ticketsOnline extends BaseAction {
     customFilterMenu:
       '//span[contains(@translate,"search.filters") and text()="Custom Filters"]',
     customFilterstatus: '//label[@translate="search.filters_status"]/..//input',
-    filterEmail: '//input[@placeholder="example@domain.com"]',              
+    filterEmail: '//input[@placeholder="example@domain.com"]',
     filterSubject: '//label[text()="Subject"]/following-sibling::div/input',
     filterAgent: '//label[@translate="search.filters_agents"]/..//input',
     searchFilterBtn: '//button[@ng-click="submitTicketSearch()"]',
@@ -314,7 +314,8 @@ exports.ticketsOnline = class ticketsOnline extends BaseAction {
     selectNoneQueue: '.fscontact-tickets-channel .agent-qct-select-none',
     queueHeader: 'h2[data-translate="manager-main-queue"]',
     channelButton: '#channel-tickets-connection-toggle',
-    subjectSelector: '#inbox-table tbody tr:first-child td:nth-child(6)'
+    subjectSelector: '#inbox-table tbody tr:first-child td:nth-child(6)',
+    closeBtn: 'span[translate="detail.close"]'
   };
 
   /**
@@ -456,10 +457,10 @@ exports.ticketsOnline = class ticketsOnline extends BaseAction {
   async editTicketManagerTabEntity(tabEntity, tab) {
     await this.click(
       '//table[@id="tm-dt-' +
-        tab +
-        '"]//td[text()="' +
-        tabEntity +
-        '"]/..//button[@title="Edit"]'
+      tab +
+      '"]//td[text()="' +
+      tabEntity +
+      '"]/..//button[@title="Edit"]'
     );
   }
 
@@ -534,7 +535,7 @@ exports.ticketsOnline = class ticketsOnline extends BaseAction {
     await this.waitForSelector(this.elements.ticketManagerMenu);
     await this.click(this.elements.ticketManagerMenu);
     await this.wait(5);
-    try{
+    try {
       await this.click(this.elements.clickOnMailbox);
     } catch (error) {
       await this.forceClick(this.elements.queueHeader);
@@ -727,7 +728,7 @@ exports.ticketsOnline = class ticketsOnline extends BaseAction {
    */
   async fillFormFields(queue, subject, mailbox, template) {
     //Queue
-    try{
+    try {
       await this.click(this.elements.sendEmailForm.queue.click);
     } catch (error) {
       await this.click(this.elements.sendEmailForm.queue.click);
@@ -1072,7 +1073,7 @@ exports.ticketsOnline = class ticketsOnline extends BaseAction {
           subject1: subjectHash + data.autodelivery,
         };
         let datas = JSON.stringify(subjects, null, 2);
-        fs.writeFile(userData.autoDelivery, '', function () {});
+        fs.writeFile(userData.autoDelivery, '', function () { });
         fs.writeFile(userData.autoDelivery, datas, function (err) {
           if (err) throw err;
         });
@@ -1415,7 +1416,7 @@ exports.ticketsOnline = class ticketsOnline extends BaseAction {
   async openCreatedTicket(email) {
     const ela = `[title="${email}"]`;
     await this.waitForSelector(ela);
-    await this.clickFirstElement(ela,true);
+    await this.clickFirstElement(ela, true);
   }
 
   /**
@@ -1652,7 +1653,7 @@ exports.ticketsOnline = class ticketsOnline extends BaseAction {
     } else {
       queueCount = this.elements.queueCount;
     }
-    try{
+    try {
       await this.waitForSelector(queueCount);
     } catch (error) {
       await this.click(this.elements.channelButton);
@@ -1833,7 +1834,7 @@ exports.ticketsOnline = class ticketsOnline extends BaseAction {
    * @return {void} Nothing
    */
   async moveTicket(previousQueueCounter) {
-    if(previousQueueCounter >= 1) {
+    if (previousQueueCounter >= 1) {
       await this.waitForSelector(this.elements.ticketQueue1);
       await this.click(this.elements.ticketQueue1);
       await this.wait(2); //loading too fast
@@ -1880,8 +1881,8 @@ exports.ticketsOnline = class ticketsOnline extends BaseAction {
     await this.click(this.elements.clickOnMailbox);
     await this.click(`//table[@id="tm-dt-mailbox"]//td[text()="${mailBoxName}"]/..//button[@title="Edit"]`);
     // need to add wait here so that page load
-    await this.wait(2); 
-    await this.clearField(this.elements.attachmentFileSizeBox); 
+    await this.wait(2);
+    await this.clearField(this.elements.attachmentFileSizeBox);
     await this.type(this.elements.attachmentFileSizeBox, fileSize);
     await this.click(this.elements.saveRule);
   }
@@ -1899,7 +1900,16 @@ exports.ticketsOnline = class ticketsOnline extends BaseAction {
    * @returns {void} nothing
    */
   async validateErrorMessage() {
-    await this.shouldContainText(this.elements.popUp,'File size bigger than allowed.');
+    await this.shouldContainText(this.elements.popUp, 'File size bigger than allowed.');
+  }
+
+  /**
+   * Function to click on close ticket button
+   * @returns {void} nothing
+   */
+  async clickCloseTicketBtn() {
+    await this.waitForSelector(this.elements.closeBtn);
+    await this.click(this.elements.closeBtn);
   }
 
   /**
@@ -1907,7 +1917,7 @@ exports.ticketsOnline = class ticketsOnline extends BaseAction {
    * @param {string} scriptName - script Name
    * @returns {void} nothing
    */
-  async openScriptTab(scriptName){
+  async openScriptTab(scriptName) {
     if (await this.isVisible(this.elements.scriptTab)) {
       await this.click(this.elements.scriptTab);
       if (await this.isVisible(this.elements.selectScript)) {

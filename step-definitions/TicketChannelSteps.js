@@ -350,3 +350,7 @@ When('assign {string} to {string} agent',async(queue, agent)=>{
 When('user clicks script tab and selects the script', async () => {
   await ticket.openScriptTab(scriptName);
 });
+
+When('user clicks on close ticket', async()=>{
+  await ticket.clickCloseTicketBtn();
+});

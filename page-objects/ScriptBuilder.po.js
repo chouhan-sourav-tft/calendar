@@ -15,8 +15,8 @@ exports.ScriptBuilder = class ScriptBuilder extends BaseAction {
   elements = {
     scriptBuilderHeader: '[id="titleHead"]> span:nth-child(3)',
     scriptBuilder: 'a[id="menu_3"]',
-    newScript: 'a[id="show_new_script_form_modal_btn"] span',
-    newScriptModal: 'div[id="new-script-modal-error-ctn"]',
+    newScript: '#show_new_script_form_modal_btn',
+    newScriptModal: '#script_form_new',
     classDropDown: 'css=div[class="select2-result-label"]',
     newScriptModalElements: {
       scriptName: 'input[id="new-script-name-input"]',
@@ -213,10 +213,7 @@ exports.ScriptBuilder = class ScriptBuilder extends BaseAction {
     startDate: '#new-script-start-date-input',
     endDate: '#new-script-end-date-input',
     textinput: '//div[@id="voice-script-container"]/div[contains(@id,"multi_script") and not (@style ="display: none;")]//div[contains(@class,"current-script-page-div")]//input',
-    calendarElementOnVoice: '(//div[@data-type="scheduler"]//button)[last()]',
-    logout:'#main-logout',
-    confirmLogout: '[id="bot2-Msg1"]',
-    
+    calendarElementOnVoice: '(//div[@data-type="scheduler"]//button)[last()]'
   };
 
 
@@ -243,12 +240,15 @@ exports.ScriptBuilder = class ScriptBuilder extends BaseAction {
    * @return {void} Nothing
    */
   async clickNewScriptButton() {
-    await this.scrollIntoElement(this.elements.newScript);
     await this.waitForSelector(this.elements.newScript);
     // waiting here so that all script loads completely
-    await this.wait(3);
-    await this.scrollIntoElement(this.elements.newScript);
-    await this.forceClick(this.elements.newScript);
+    await this.wait(5);
+    await this.scrollup();
+    await this.click(this.elements.newScript);
+    await this.wait(3);//added wait to load popup modal
+    if (!(await this.isVisible(this.elements.newScriptModal))) {
+      await this.click(this.elements.newScript);
+    }
   }
 
   /**
@@ -727,8 +727,10 @@ exports.ScriptBuilder = class ScriptBuilder extends BaseAction {
    */
   async selectScript(scriptName) {
     await this.mouseOver(this.elements.selectScript);
-    await this.waitForSelector(this.elements.selectScript);
+    //wair for scrip tab to load
+    await this.wait(3);
     if (await this.isVisible(this.elements.selectScript)) {
+      await this.waitForSelector(this.elements.selectScript);
       await this.dropdownOptionSelect(this.elements.selectScript, scriptName);
     }
   }
@@ -1313,6 +1315,9 @@ exports.ScriptBuilder = class ScriptBuilder extends BaseAction {
     if (element === 'calendar') {
       await this.waitForSelector(this.elements.calendarSelect);
       await this.click(this.elements.calendarSelect);
+      if (!(await this.isVisible(this.elements.calendarTitle))) {
+        await this.click(this.elements.calendarSelect);
+      }
     }
   }
 
@@ -1630,6 +1635,7 @@ exports.ScriptBuilder = class ScriptBuilder extends BaseAction {
    * @return {void} Nothing
    */
   async bookEvent(hour, desc, days) {
+    await this.waitForSelector(this.elements.selectDay);
     await this.click(this.elements.selectDay);
     if (days === 'month') {
       days = dayjs().daysInMonth() + 1;
@@ -1685,16 +1691,5 @@ exports.ScriptBuilder = class ScriptBuilder extends BaseAction {
     if (fillScriptObject.textinput) {
       await this.type(this.elements.textinput, fillScriptObject.textinput);
     }
-  }
-
-  /**
-   * function to logout from the platform
-   * @return {void} Nothing
-   */
-  async platformLogout() {
-    await this.waitForSelector(this.elements.logout);
-    await this.click(this.elements.logout);
-    await this.waitForSelector(this.elements.confirmLogout);
-    await this.click(this.elements.confirmLogout);
   }
 };

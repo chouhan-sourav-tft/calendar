@@ -119,7 +119,6 @@ When('user create a new script for {string}', async (scriptType, table) => {
   const newScriptForm = table.rowsHash();
   await scriptBuilder.clickNewScriptButton();
   await scriptBuilder.verifyNewScriptModal();
-  console.log('click new script tab');
   await scriptBuilder.fillNewScriptDetails(scriptName, newScriptForm);
   await scriptBuilder.verifySuccessPopup(scriptName);
 });
@@ -139,10 +138,19 @@ When(
 );
 
 When(
-  'user add {string} element {string} to the script',
-  async (length, element) => {
-    await scriptBuilder.addElement(element);
-    // await scriptBuilder.verifyElementsDragged(length);
+  'user adds {int} {string} elements to the script',
+  async (length, textInput, table) => {
+    const textInputTitle = table.rows();
+    for (let i = 0; i < length; i++) {
+      await scriptBuilder.addElement(textInput);
+    }
+    for (let i = 0; i < length; i++) {
+      await scriptBuilder.setTextInput({
+        title: textInputTitle[i][0],
+        number: i,
+      });
+    }
+    await scriptBuilder.verifyElementsDragged(length);
   }
 );
 
@@ -475,8 +483,7 @@ Then('user selects calendar element', async()=>{
   await scriptBuilder.selectCalendarElement();
 });
 
-Then('user book a event in a calendar at {string} with desc as {string} after {string} day', async(hour,desc,days)=>{
-  console.log('inside book reservation');
+Then('user book a event in a calendar at {string} with desc as {string} after {int} day', async(hour,desc,days)=>{
   await scriptBuilder.bookEvent(hour,desc,days);
 });
 
@@ -511,15 +518,3 @@ When('user books event in calendar with following information:', async(dataTable
     await scriptBuilder.bookEvent(bookingDetails[i].hour, bookingDetails[i].desc, bookingDetails[i].days);
   }
 });
-
-Then('In the Scripts tab, select the script created previously', async() => {
-  await scriptBuilder.clickScriptTabVoiceChannel();
-  const newScriptForCalendar = global.scriptNew;
-  await scriptBuilder.selectScriptInVoiceChannel(newScriptForCalendar);
-  console.log(newScriptForCalendar + 'script selected');
-});
-
-When('user logout from the platform',async()=>{
-  await scriptBuilder.platformLogout();
-});
-

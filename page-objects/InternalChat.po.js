@@ -36,8 +36,6 @@ exports.InternalChat = class InternalChat extends BaseAction {
     await this.click(this.elements.sidePanelExpandMenu);
     await this.click(this.elements.adminToolsMenu);
     await this.click(this.elements.profileManagerButton);
-    await this.click(this.elements.adminToolsMenu);
-    await this.click(this.elements.sidePanelExpandMenu);
   }
 
   /**
@@ -148,5 +146,16 @@ exports.InternalChat = class InternalChat extends BaseAction {
   async verifyUnreadNotificationText(text,type=''){
     await this.mouseOver(this.elements.markAsReadSelector,type);
     await this.shouldContainText(this.elements.unreadNotificationText,text,type);
+  }
+
+  /**
+   * function to uncheck mask phone number checkbox
+   * @return {void} Nothing
+   */
+  async uncheckMaskNumber() {
+    await this.waitForSelector(this.elements.maskNumberCheckbox);
+    await this.isVisible(this.elements.maskNumberCheckbox);
+    if(await this.isChecked(this.elements.maskNumberCheckbox))
+      await this.click(this.elements.maskNumberCheckbox);
   }
 };

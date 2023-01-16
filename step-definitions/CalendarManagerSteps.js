@@ -1,9 +1,7 @@
 const { When, Then } = require('@cucumber/cucumber');
 const { CalendarManager } = require('../page-objects/CalendarManager.po');
-const { ScriptBuilder } = require('../page-objects/ScriptBuilder.po');
 const dayjs = require('dayjs');
 const calendarManager = new CalendarManager();
-const scriptBuilder = new ScriptBuilder();
 let eventName = '';
 let calendarName = '';
 global.calendarName = '';
@@ -133,7 +131,7 @@ Then('user search the calendar by using following configurations:', async (calen
   await calendarManager.searchCalendarDetails(searchCalendarObject);
 });
 
-When('user validate that the calendar and the corresponding bookings are displayed correctly:', async (dataTable) => {
+When('validate that the calendar and the corresponding bookings are displayed correctly:', async (dataTable) => {
   const result = dataTable.rowsHash();
   if (!result.calendarName) {
     result.calendarName = calendarName;
@@ -164,82 +162,11 @@ Then('reset active variables', async () =>{
   eventName = '';
   calendarName = '';
   global.calendarName = '';
+  global.eventName = '';
 });
 
-Then('user selects calendar', async()=>{
-  await calendarManager.selectCalendarElement();
+When('set viewport for calendar', async () => {
+  global.page.setViewportSize({ width: 1220, height: 580 });
 });
 
-When ('user select Calendar element', async() => {
-  await calendarManager.clickScriptTagCalendar();
-  // await calendarManager.validSomeData();
-  console.log('user clicks on calendar');
-});
 
-Then('user select the Back option', async() => {
-  await scriptBuilder.backPage();
-});
-
-Then('user select the Visualization tab', async() => {
-  await calendarManager.clickVisualizationTab();
-});
-
-When('user search for calendar {string}', async(calendar) => {
-  await calendarManager.searchCalendarBox(calendar);
-});
-
-When('user validate that the scheduled reservation is correctly displayed on the calendar', async() => {
-  await calendarManager.validateReservation();
-});
-
-When('select the {string} profile', async(profileAccess)=>{
-  await calendarManager.clickProfileSelect();
-  await calendarManager.inputProfileSelect(profileAccess);
-});
-
-When('on the section Calendar Permissions, configure the following data',async (table) => {
-  const calenderPermissions = table.rowsHash();
-  await calendarManager.setCalendarPermissions(calenderPermissions);
-});
-
-When('user save the changes', async()=>{
-  await calendarManager.saveSetting();
-});
-
-Then('user select the reservation previously made', async() => {
-  await calendarManager.selectPreviousReservation();
-});
-
-When('validate that the Supervisor is able to delete the reservation', async() => {
-  await calendarManager.validateDeleteButton();
-});
-
-Then('user select the delete option', async() => {
-  await calendarManager.deleteReservation();
-})
-
-When('validate that the scheduled reservation previously made is not displayed on the calendar', async() => {
-  await calendarManager.validateDeletedReservation();
-})
-
-Then('user navigate to wallborad', async() => {
-  await calendarManager.navigateWallboard();
-})
-
-Then('user selects the template {string}', async(template) => {
-  await calendarManager.selectTemplate(template);
-})
-
-When('In Outbound section, verify the following data:', async(datatable) => {
-  let wallboardData = '';
-  datatable.hashes().forEach((element) => {
-    
-    wallboardData = {
-      agentsReady: element.agentsReady,
-      agentsTalking: element.agentsTalking,
-      agentsOutcomes: element.agentsOutcomes,
-      agentsBreaks: element.agentsBreaks
-    };
-  });
-  await calendarManager.verifyOutboundSectionData(wallboardData);
-})
