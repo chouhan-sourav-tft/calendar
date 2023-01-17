@@ -2,6 +2,7 @@
 const { When, Then } = require('@cucumber/cucumber');
 const { Wallboard } = require('../page-objects/Wallboard.po');
 const wallboard = new Wallboard();
+let templateName = '';
 
 When('user access the wallboard menu', async () => {
   await wallboard.navigateToWallboardMenu();
@@ -41,29 +42,29 @@ Then('select the option {string}', async (newTemplate) => {
   await wallboard.clickOnNewTemplateTab(newTemplate);
 });
 
-When('user fill the modal with the following information:', async (dataTable) => {
-  const modalDetails = dataTable.rowsHash();
+When('user fill the modal with the following information:', async (datatable) => {
+  let modalDetails = '';
+  datatable.hashes().forEach((element) => {
+    templateName = element.templateName + new Date().getTime();
+    modalDetails = {
+      'templateName': templateName,
+      'templateType': element.templateType
+    };
+  });
   await wallboard.fillModalDetails(modalDetails);
-})
+});
 
 Then('user access the wallboard menu in {string} window', async (session) => {
   await wallboard.navigateWallboardMenu(session);
 })
 
-Then('user check that Supervisor#2 can access to the template {string} created by Supervisor#1 in {string} window',
-  async (template, session) => {
-    await wallboard.selectWallboardTemplateinSecondTab(template, session);
-    await wallboard.clickFirstSettingIcon(session);
-
+Then('user check that Supervisor#2 can access previously created template in {string} window',
+  async (session) => {
+    await wallboard.verifyTemplate(templateName, session)
   })
 
 Then('user click to edit the first section and fill title of form {string} in {string} window', async (title, session) => {
-  // let sectionDetails = '';
-  // datatable.hashes().forEach((element) => {
-  //   sectionDetails = {
-  //     'titleOfForm': element.titleOfForm
-  //   };
-  // });
+  await wallboard.clickFirstSettingIcon(session);
   await wallboard.fillSectionDetails(title, session);
 })
 
@@ -71,15 +72,11 @@ When('user click on Save in {string} window', async (session) => {
   await wallboard.saveSectionDetails(session);
 })
 
-Then('Supervisor#2 cannot edit the template created by Supervisor#1. Is displayed a notification error: {string} in {string} window',
+Then('user verify the error: {string} in {string} window',
   async (errorMessage, session) => {
     await wallboard.verifyErrorPopup(errorMessage, session);
   })
 
 When('user click to Delete in {string} window', async (session) => {
   await wallboard.deleteSectionDetails(session);
-})
-
-Then('Supervisor#2 cannott delete the template created by Supervisor#1. Is displayed a notification error: {string} in {string} window', async (errorMessage, session) => {
-  await wallboard.verifyErrorPopup(errorMessage, session);
 })

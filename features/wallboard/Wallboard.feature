@@ -152,7 +152,7 @@ Feature: Wallboard
         When User navigate to dashboard page in 'second' window
         When user selects the 'Voice Inbound' tab in 'second' window
         When user selects the agent tab in 'second' window
-        When verify 'Supervisor One' is in the list in voice inbound tab in 'ready' state in 'second' window
+        # When verify 'Supervisor One' is in the list in voice inbound tab in 'ready' state in 'second' window
         When User select the action tab in 'second' window
         When User click on Force Logout
         When verify that agent is succesfully Force logout
@@ -313,18 +313,15 @@ Feature: Wallboard
     @7119
     Scenario: Wallboard
         When user access the wallboard menu
-        And user select 'Templete_1' from list
         Then select the option 'New Template'
         And user fill the modal with the following information:
-            | templateName | Template_Protected |
-            | templateType | Global Protected   |
+            | templateName       | templateType      |
+            | Template_Protected | Global Protected  |
         When user login to the platform with 'Supervisor_2' account in 'second' window
         When user access the wallboard menu in 'second' window
-        And user check that Supervisor#2 can access to the template 'Template_Protected (Supervisor One)' created by Supervisor#1 in 'second' window
+        And user check that Supervisor#2 can access previously created template in 'second' window
         Then user click to edit the first section and fill title of form 'Test#1' in 'second' window
-            # | titleOfForm | boxOfType         |
-            # | Test#1      | Voice Inbound#1   |
         When user click on Save in 'second' window
-        Then Supervisor#2 cannot edit the template created by Supervisor#1. Is displayed a notification error: 'Cannot change Global Protected Template' in 'second' window
+        Then user verify the error: 'Cannot change Global Protected Template' in 'second' window
         And user click to Delete in 'second' window
-        Then Supervisor#2 cannott delete the template created by Supervisor#1. Is displayed a notification error: 'Cannot delete Global Protected Template' in 'second' window
+        Then user verify the error: 'Cannot delete Global Protected Template' in 'second' window

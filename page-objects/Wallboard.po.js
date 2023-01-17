@@ -195,18 +195,19 @@ exports.Wallboard = class Wallboard extends BaseAction {
     await this.click(this.elements.sidePanelExpandMenu, type);
   }
 
-  /**
-   * Function to select template in wallboard dashboard
-   * @param {string} templateName - Template name
-   * @return {void} Nothing
-   */
-  async selectWallboardTemplateinSecondTab(templateName, type = '') {
+ /**
+ * Function to verify user access previously created template 
+ * @param {string} templateName - Template name
+ * @return {void} Nothing
+ */
+  async verifyTemplate(templateName, type = '') {
     await this.waitForSelector(this.elements.templateList, type);
     await this.click(this.elements.templateList, type);
     await this.type(this.elements.inputText, templateName, type);
-    let selectTemplate = `//div[@id='select2-drop']//ul[@class='select2-results']//li//li[contains(.,'${templateName}')]`;
-    await this.waitForSelector(selectTemplate, type);
-    await this.click(selectTemplate, type);
+    let locator = `//div[@id='select2-drop']//ul[@class='select2-results']//li//li[contains(.,'${templateName}')]`;
+    let accessTemplate = await this.isVisible(locator, type);
+    assert.isTrue(accessTemplate);
+    await this.click(locator, type);
     await this.wait(2); //wait to load dashboard
   }
 
@@ -219,17 +220,15 @@ exports.Wallboard = class Wallboard extends BaseAction {
   async clickFirstSettingIcon(type = '') {
     await this.click(this.elements.firstSettingIcon, type);
   }
+
+  /**
+  * Function to save the section
+  * @return {void} Nothing
+  */
   async fillSectionDetails(titleOfForm, type = '') {
-    // await this.waitForSelector(this.elements.boxOfType, type);
-    // await this.selectOptionByValue(this.elements.boxOfType, sectionDetails.boxOfType, type);
-    // await this.waitForSelector(this.elements.titleInputBox, type);
-    // await this.clearField(this.elements.titleInputBox, type);
     await this.type(this.elements.titleInputBox, titleOfForm, type);
-    // await this.waitForSelector(this.elements.saveButton, type);
-    // await this.click(this.elements.saveButton, type);
   }
 
-  
   /**
   * Function to save the section
   * @return {void} Nothing
@@ -239,7 +238,6 @@ exports.Wallboard = class Wallboard extends BaseAction {
     await this.click(this.elements.saveButton, type);
   }
 
-  
   /**
   * Function to save the section
   * @param {string} error - error popup
@@ -254,7 +252,7 @@ exports.Wallboard = class Wallboard extends BaseAction {
   * Function to delete the section
   * @return {void} Nothing
   */
-   async deleteSectionDetails(type = '') {
+  async deleteSectionDetails(type = '') {
     await this.wait(5);
     await this.waitForSelector(this.elements.deleteButton, type);
     await this.click(this.elements.deleteButton, type);
