@@ -24,7 +24,7 @@ Feature: Wallboard
         When user dial the number '8094217411' in ready state in 'second' window
         When user make a call in 'second' window
         Then user state should be 'talking' in 'second' window
-        When user disconnects the call in 'second' window
+        When user disconnects the call in 'second' windowc
         And user state should be 'outcomes' in 'second' window
         Then user submits 'Call Again Later' outcome and select 'Ok' outcome name in 'second' window
         When user access the wallboard menu
@@ -50,56 +50,7 @@ Feature: Wallboard
             | 37        | 37       | 100%            | 00:00:10 |
         Then close the 'second' window session
         Then close the 'third' window session
-    # @7095
-    # Scenario: Wallboard - Outbound Call(s)
-    #     When user navigates to voice manager
-    #     Then user edits the campaign 'OutboundCampaign_3'
-    #     When user navigates to dialer
-    #     Then select the dialer type 'manual'
-    #     And save the changes in edit campaign
-    #     Then user edits the campaign 'OutboundCampaign_4'
-    #     When user navigates to dialer
-    #     Then select the dialer type 'manual'
-    #     And save the changes in edit campaign
-    #     When user login to the platform with 'Agent_1' account in 'second' window
-    #     Then login to Voice Channel with '100' extension in 'second' window
-    #     And user selects 'OutboundCampaign_3' campaign with '' queue in 'second' window
-    #     When user dial the number '8094217411' in ready state in 'second' window
-    #     When user make a call in 'second' window
-    #     Then user state should be 'talking' in 'second' window
-    #     And let user wait for '5' seconds
-    #     When user disconnects the call in 'second' window
-    #     And user state should be 'outcomes' in 'second' window
-    #     Then user submits 'Call Again Later' outcome and select 'Ok' outcome name in 'second' window
-    #     # And refresh the page
-    #     And let user wait for '300' seconds
-    #     And refresh the page
-    #     When user access the wallboard menu
-    #     And user select 'Template_1' from list
-    #     Then verify 'Outbound' section data with following configurations:
-    #         | callsMade | answered | answeredPercent | TMA      |
-    #         | 36         | 36        | 100%            | 00:00:10 |
-    #     When user login to the platform with 'Agent_2' account in 'third' window
-    #     Then login to Voice Channel with '100' extension in 'third' window
-    #     And user selects 'OutboundCampaign_4' campaign with '' queue in 'third' window
-    #     When user dial the number '8094217412' in ready state in 'third' window
-    #     When user make a call in 'third' window
-    #     Then user state should be 'talking' in 'third' window
-    #     And let user wait for '5' seconds
-    #     When user disconnects the call in 'third' window
-    #     And user state should be 'outcomes' in 'third' window
-    #     Then user submits 'Call Again Later' outcome and select 'Ok' outcome name in 'third' window
-    #     # And refresh the page
-    #     And let user wait for '300' seconds
-    #     And refresh the page
-    #     When user access the wallboard menu
-    #     And user select 'Template_1' from list
-    #     Then verify 'Outbound' section data with following configurations:
-    #         | callsMade | answered | answeredPercent | TMA      |
-    #         | 37         | 37        | 100%            | 00:00:10 |
-    #     Then close the 'second' window session
-    #     Then close the 'third' window session
-
+    
     @7106
     Scenario: Wallboard - Inbound Call(s)
         When user login to the platform with 'Agent_1' account in 'second' window
@@ -325,3 +276,23 @@ Feature: Wallboard
         Then user verify the error: 'Cannot change Global Protected Template' in 'second' window
         And user click to Delete in 'second' window
         Then user verify the error: 'Cannot delete Global Protected Template' in 'second' window
+
+    @7109
+    Scenario: Wallboard
+        When user login to the platform with 'Agent_1' account in 'second' window
+        And login to Voice Channel with '100' extension in 'second' window
+        And user selects 'OutboundCampaign_1' campaign with 'InboundQueue_1' queue in 'second' window
+        When user dial the number '999888771' in ready state in 'second' window
+        And user state should be 'manual-preview' in 'second' window
+        And client makes a call via API with following configurations:
+            | callerDestination | callerCaller | did_data |
+            | 300501602         | 999888777    | 1        |
+        And let user wait for '5' seconds in 'second' window
+        And client Hangup the '0' call via API
+        And let user wait for '300' seconds
+        And refresh the page
+        When user access the wallboard menu in 'first' window
+        And user select 'Template_1' from list
+        Then verify 'Inbound' section data with following configurations:
+            | abandoned | abandonedPercent |
+            | 11        | 47.83            |

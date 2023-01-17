@@ -23,7 +23,11 @@ Then('verify {string} section data with following configurations:', async (campa
       'ready': element.ready,
       'talking': element.talking,
       'outcome': element.outcome,
-      'break': element.break
+      'break': element.break,
+      'abandoned': element.abandoned,
+      'abandonedPercent': element.abandonedPercent,
+      'TME': element.TME,
+      'waitQueue': element.waitQueue
     });
   });
 

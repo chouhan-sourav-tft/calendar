@@ -139,6 +139,30 @@ exports.Wallboard = class Wallboard extends BaseAction {
         campaignData.break
       );
     }
+    if (campaignData.abandoned) {
+      await this.shouldContainText(
+        `${boxid} #totalAbandon strong`,
+        campaignData.abandoned
+      );
+    }
+    if (campaignData.abandonedPercent) {
+      await this.shouldContainText(
+        `${boxid} #abandonPercent strong`,
+        campaignData.abandonedPercent
+      );
+    }
+    if (campaignData.TME) {
+      await this.shouldContainText(
+        `${boxid} #tme strong`,
+        campaignData.TME
+      );
+    }
+    if (campaignData.waitQueue) {
+      await this.shouldContainText(
+        `${boxid} #inQueue strong`,
+        campaignData.waitQueue
+      );
+    }
   }
 
   /**
