@@ -395,7 +395,7 @@ exports.WebchatPlugin = class WebchatPlugin extends BaseAction {
    */
   async logoutSession(type='') {
     // required to work in staging environment
-    await this.wait(2);
+    // await this.wait(2);
     await this.forceClick(this.elements.mainLogout, type);
     await this.waitForSelector(this.elements.mainLogoutConfirm, type);
     await this.forceClick(this.elements.mainLogoutConfirm, type);

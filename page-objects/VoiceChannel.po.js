@@ -298,7 +298,7 @@ exports.VoiceChannel = class VoiceChannel extends BaseAction {
     await this.waitForSelector(this.elements.callNumberButton, type);
     await this.click(this.elements.callNumberButton, type);
     // waiting for call to connect
-    await this.wait(5);
+    // await this.wait(5);
   }
 
   /**
@@ -497,7 +497,7 @@ exports.VoiceChannel = class VoiceChannel extends BaseAction {
    */
   async verifyUserState(userState, type = '') {
     //added wait to load state
-    this.wait(6);
+    // this.wait(6);
     if (userState === 'talking') {
       await this.waitForSelector(this.elements.voiceControl, type);
     }
@@ -597,7 +597,7 @@ exports.VoiceChannel = class VoiceChannel extends BaseAction {
    * @returns {void} nothing
    */
   async openDialerTab() {
-    await this.wait(6);
+    // await this.wait(6);
     await this.waitForSelector(this.elements.dialerTab);
     await this.click(this.elements.dialerTab);
   }
@@ -1066,7 +1066,7 @@ exports.VoiceChannel = class VoiceChannel extends BaseAction {
    */
   async selectCampaignInDialerControl(outbound) {
     // need to wait to option to load
-    await this.wait(5);
+    // await this.wait(5);
     await this.dropdownOptionSelect(
       this.elements.dialerControlOutboundCampaign,
       outbound
@@ -1692,7 +1692,7 @@ exports.VoiceChannel = class VoiceChannel extends BaseAction {
     }
     await this.click(this.elements.voiceSubmit, type);
     //wait for agent to be ready
-    await this.wait(5);
+    // await this.wait(5);
   }
 
   /**

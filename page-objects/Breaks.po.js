@@ -274,7 +274,7 @@ exports.Breaks = class Breaks extends BaseAction {
   async requestForBreakOnLimit(breakName) {
     await this.waitForSelector(this.elements.userCounter, 'second');
     await this.waitForSelector(this.elements.breaksButton, 'second');
-    await this.wait(2); // wait is needed to load breaks
+    // await this.wait(2); // wait is needed to load breaks
     await this.mouseOver(this.elements.breaksButton, 'second');
     await this.forceClick(this.elements.breaksButton, 'second');
     await this.waitForSelector(this.elements.breaksDropdown, 'second');
@@ -297,7 +297,7 @@ exports.Breaks = class Breaks extends BaseAction {
    */
   async exceedTimeValidate(breakName) {
     await this.waitForSelector(this.elements.breaksButton);
-    await this.forceClick(this.elements.breaksButton);
+    await this.click(this.elements.breaksButton);
     const locator = `//li[contains(., "${breakName}")]`;
     await this.waitForSelector(locator);
     await this.isVisible(locator);

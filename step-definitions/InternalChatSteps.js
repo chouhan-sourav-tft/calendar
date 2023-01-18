@@ -114,7 +114,7 @@ When('user login to the platform with {string} account in {string} window', asyn
   await homepageObj.loginProcess(login[userType], session);
   await homepageObj.verifyPageDisplayed('dashboard', session);
   await homepageObj.verifyPageDisplayedRoleWise(userType, session);
-  await homepageObj.wait(5);//wait for page to load
+  // await homepageObj.wait(5);//wait for page to load
   await homepageObj.deleteRedisCall(session);
 });
 
