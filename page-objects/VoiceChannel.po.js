@@ -1003,7 +1003,7 @@ exports.VoiceChannel = class VoiceChannel extends BaseAction {
    */
   async voiceChannelLogout(type = '') {
     // need to wait for login button to perform click event
-    await this.wait(2);
+    // await this.wait(2);
     await this.click(this.elements.voiceChannelLogin, type);
     await this.click(this.elements.voiceChannelLogout, type);
   }
