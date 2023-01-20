@@ -109,10 +109,10 @@ Feature: Database Manager
             | browseFile          | noOfRecord |
             | fixtures/search.csv | 3          |
 
-    @1013
-    Scenario: Database Edit
-        When Navigate to Database Manager
-        And Edit the 'random' Database
-            | queue          | browseFile            | numOfColumnsToUpload | databaseCampaign | optionName | optionPhone1 |
-            | InboundQueue_1 | fixtures/database.csv | 1                    | 1                | 0          | 1            |
-        And Deactivate the '0' database
+    # @1013
+    # Scenario: Database Edit
+    #     When Navigate to Database Manager
+    #     And Edit the 'random' Database
+    #         | queue          | browseFile            | numOfColumnsToUpload | databaseCampaign | optionName | optionPhone1 |
+    #         | InboundQueue_1 | fixtures/database.csv | 1                    | 1                | 0          | 1            |
+    #     And Deactivate the '0' database

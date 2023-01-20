@@ -169,6 +169,7 @@ exports.Database = class Database extends BaseAction {
       this.elements.clickBrowse,
       databaseDetails.browseFile
     );
+    await this.waitForSelector(this.elements.uploadDatabase);
     await this.click(this.elements.uploadDatabase);
     await this.wait(2); // File upload takes time
     await this.dropdownOptionSelect(
@@ -249,7 +250,7 @@ exports.Database = class Database extends BaseAction {
     await this.type(this.elements.searchTableName, tableName);
     await this.pressKey('Backspace');
     //waiting for filter results to be visible
-    await this.wait(2);
+    // await this.wait(2);
     if ((await this.countElement(this.elements.tableOddName)) === 0) {
       await this.createTable(tableName, TableDetails);
     } else {
@@ -282,7 +283,7 @@ exports.Database = class Database extends BaseAction {
     await page.locator(this.elements.clickOnTable).nth('1').click();
     await this.waitForSelector(this.elements.tableRecordVisible);
     //wait for text to load
-    await this.wait(2);
+    // await this.wait(2);
     const noOfRecord = await this.getTexts(this.elements.tableRecordVisible);
     assert.equal(noOfRecord, TableDetails.noOfRecord);
   }
@@ -311,7 +312,7 @@ exports.Database = class Database extends BaseAction {
       await page.locator(this.elements.clickOnTable).nth('1').click();
     }
     await this.waitForSelector(this.elements.tableRecordVisible);
-    await this.wait(1); //flacky count UI
+    // await this.wait(1); //flacky count UI
     const POfRecord = await this.getTexts(this.elements.tableRecordVisible);
     await this.click(this.elements.tableEdit);
     await this.browseFile(
@@ -319,7 +320,7 @@ exports.Database = class Database extends BaseAction {
       TableDetails.browseFile
     );
     await this.click(this.elements.uploadTable);
-    await this.wait(2); // File upload takes time
+    // await this.wait(2); // File upload takes time
     await this.click(this.elements.updateTable);
     await this.waitForSelector(this.elements.tableUpdatedPopUp);
     const success = await this.isVisible(this.elements.tableUpdatedPopUp);
@@ -370,7 +371,7 @@ exports.Database = class Database extends BaseAction {
     await this.searchTable(tableName, TableDetails);
     await this.click(this.elements.flushTable);
     await this.click(this.elements.deleteTable);
-    await this.wait(3); //updated results take some time to reflect
+    await this.wait(1); //updated results take some time to reflect
     const noOfRecord = await this.getTexts(this.elements.tableRecordVisible);
     assert.equal(noOfRecord, 0);
   }
@@ -438,7 +439,7 @@ exports.Database = class Database extends BaseAction {
    * @return {void} Nothing
    */
   async deactivateDatabase(databaseName) {
-    await this.wait(2);
+    // await this.wait(2);
     await this.searchDB(databaseName);
     await this.forceClick(this.elements.databaseActivateToggle);
   }
