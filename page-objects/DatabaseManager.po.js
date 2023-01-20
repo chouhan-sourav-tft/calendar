@@ -78,7 +78,7 @@ exports.Database = class Database extends BaseAction {
       await this.click(this.elements.selectNew);
     }
     await this.click(this.elements.databaseName);
-    await this.wait(5); //Require time to load the fields
+    // await this.wait(5); //Require time to load the fields
     await this.type(this.elements.databaseName, databaseName);
     await this.dropdownOptionSelect(
       this.elements.databaseCampaign,
@@ -89,19 +89,19 @@ exports.Database = class Database extends BaseAction {
       databaseDetails.browseFile
     );
     await this.click(this.elements.uploadDatabase);
-    await this.wait(5); //Require time to load the fields
+    // await this.wait(5); //Require time to load the fields
     await this.waitForSelector(this.elements.selectContactName);
     await this.dropdownOptionSelect(
       this.elements.selectContactName,
       databaseDetails.optionName
     );
-    await this.wait(2); //Require time to load the dropdown values
+    // await this.wait(2); //Require time to load the dropdown values
     await this.dropdownOptionSelect(
       this.elements.selectPhoneField,
       databaseDetails.optionPhone1
     );
     await this.click(this.elements.matchFields);
-    await this.wait(6); //Require time to match field.
+    // await this.wait(6); //Require time to match field.
   }
 
   /**
@@ -131,12 +131,12 @@ exports.Database = class Database extends BaseAction {
    */
 
   async searchDB(databaseName, databaseDetails) {
-    await this.wait(3); //Require time to load the fields
+    // await this.wait(3); //Require time to load the fields
     await this.waitForSelector(this.elements.searchDatabase);
     await this.forceClick(this.elements.searchDatabase);
     await this.type(this.elements.searchDatabase, databaseName);
     await this.pressKey('Backspace');
-    await this.wait(6); //Results take time to get reflected
+    await this.wait(3); //Results take time to get reflected
     const emptyDatabaseList = await this.isVisible(this.elements.noDataDb);
     if (emptyDatabaseList === true) {
       await this.createDatabase(databaseName, databaseDetails);
@@ -392,7 +392,7 @@ exports.Database = class Database extends BaseAction {
    * @return {void} Nothing
    */
   async loadDatabase(databaseName, databaseDetails) {
-    await this.wait(3); //page takes time to respond
+    // await this.wait(3); //page takes time to respond
     await this.waitForSelector(this.elements.loadDatabase);
     await this.click(this.elements.loadDatabase);
     await this.waitForSelector(this.elements.databaseCreatedPopUp);
@@ -402,7 +402,7 @@ exports.Database = class Database extends BaseAction {
     await this.waitForSelector(this.elements.dataTable);
     await this.forceClick(this.elements.dataTable);
     //updated results will take some time to get reflected on the UI
-    await this.wait(5);
+    await this.wait(3);
     const noOfRecord = await this.getTexts(this.elements.databaseRecordVisible);
     assert.equal(noOfRecord, databaseDetails.numOfColumnsToUpload);
   }

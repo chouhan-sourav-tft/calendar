@@ -514,7 +514,7 @@ exports.Homepage = class Homepage extends BaseAction {
     headers = {
       'qa-api-key': global.QA_API_KEY, 
     };
-    // await this.wait(5); //wait for element to load
+    await this.wait(5); //wait for element to load
     let check = await this.isVisible(this.elements.activeCallModal, session);
     if (check) {
       let value = await this.getAttributeElement(

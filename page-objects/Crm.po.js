@@ -280,7 +280,7 @@ exports.CRM = class Crm extends BaseAction {
     await this.waitForSelector(this.elements.callDateColumn);
     await this.click(this.elements.callDateColumn);
     await this.click(this.elements.callDateColumn);
-    await this.wait(3); //added wait to load recent most row
+    await this.wait(5); //added wait to load recent most row
     await this.click(`//table[@id="table_search_result_calls"]//td[contains(text(),'${number}')]`);
   }
 
@@ -539,7 +539,7 @@ exports.CRM = class Crm extends BaseAction {
    */
   async openTemplateContactFeild() {
     //add wait to load crm
-    await this.wait(2);
+    // await this.wait(2);
     await this.waitForSelector(this.elements.crmManager);
     await this.mouseOver(this.elements.crmManager);
     await this.click(this.elements.templateField);

@@ -1,4 +1,4 @@
-let host = (typeof process.env.npm_config_host) === 'undefined' ? 'https://irl-w1-aws-dev-2022029.finesource.org' : process.env.npm_config_host;
+let host = (typeof process.env.npm_config_host) === 'undefined' ? 'https://qa-lab4.finesource.org' : process.env.npm_config_host;
 let domainUUID = (typeof process.env.npm_config_domain_uuid) === 'undefined' ? '10b80601-3225-4928-b346-25eda1f3f51e' : process.env.npm_config_domain_uuid;
 let email = (typeof process.env.npm_config_email) === 'undefined' ? 'qa.staging.inbound3@outlook.com' : process.env.npm_config_email;
 let domain = (typeof process.env.npm_config_domain) === 'undefined' ? 'tests.ci' : process.env.npm_config_domain;

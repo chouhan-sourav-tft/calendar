@@ -298,7 +298,7 @@ exports.VoiceChannel = class VoiceChannel extends BaseAction {
     await this.waitForSelector(this.elements.callNumberButton, type);
     await this.click(this.elements.callNumberButton, type);
     // waiting for call to connect
-    // await this.wait(5);
+    await this.wait(5);
   }
 
   /**
@@ -497,7 +497,7 @@ exports.VoiceChannel = class VoiceChannel extends BaseAction {
    */
   async verifyUserState(userState, type = '') {
     //added wait to load state
-    // this.wait(6);
+    this.wait(6);
     if (userState === 'talking') {
       await this.waitForSelector(this.elements.voiceControl, type);
     }
@@ -823,7 +823,7 @@ exports.VoiceChannel = class VoiceChannel extends BaseAction {
    */
   async openCallOutcome() {
     // waiting for call outcome tab to be visible
-    await this.wait(2);
+    // await this.wait(2);
     await this.waitForSelector(this.elements.callOutcomeTab);
     await this.click(this.elements.callOutcomeTab);
   }
@@ -868,7 +868,7 @@ exports.VoiceChannel = class VoiceChannel extends BaseAction {
       let callbackNextDate = `//div[@class="xdsoft_datetimepicker xdsoft_noselect xdsoft_"][starts-with(@style,"display: block;")]//table/tbody/tr/td[@data-date="${tomorrowDate}"][@data-month="${tomorrowMonth}"]`;
       if(!(await this.isVisible(callbackNextDate))){
         await this.click(this.elements.nextMonthButton);
-        await this.wait(2);//wait to load calendar
+        // await this.wait(2);//wait to load calendar
       }
       await this.waitForSelector(callbackNextDate);
       await this.click(callbackNextDate);
@@ -892,7 +892,7 @@ exports.VoiceChannel = class VoiceChannel extends BaseAction {
     }
     await this.click(this.elements.submitVoiceOutcomeButton);
     // need to add wait here as state need time to change
-    await this.wait(5);
+    // await this.wait(5);
   }
 
   /**
@@ -969,7 +969,7 @@ exports.VoiceChannel = class VoiceChannel extends BaseAction {
       );
     }
     if (validateCall.noCallback) {
-      await this.wait(3); //take time to load the latest row
+      // await this.wait(3); //take time to load the latest row
       await this.waitForSelector(this.elements.noCallback);
       await this.shouldContainText(
         this.elements.noCallback,
@@ -1003,7 +1003,7 @@ exports.VoiceChannel = class VoiceChannel extends BaseAction {
    */
   async voiceChannelLogout(type = '') {
     // need to wait for login button to perform click event
-    // await this.wait(2);
+    await this.wait(2);
     await this.click(this.elements.voiceChannelLogin, type);
     await this.click(this.elements.voiceChannelLogout, type);
   }
@@ -1457,7 +1457,7 @@ exports.VoiceChannel = class VoiceChannel extends BaseAction {
       await this.type('//input[@id="campaign-name"]', settings.campaignName);
 
       // waiting here so that edit campaign load
-      await this.wait(3);
+      // await this.wait(3);
       if(settings.template){
         await this.click(this.elements.template);
         await this.type(this.elements.templateSearch, settings.template);
