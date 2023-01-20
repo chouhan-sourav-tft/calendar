@@ -40,9 +40,9 @@ Feature: Dialer Control
         And user state should be 'ready' in 'second' window
         When user navigate to crm
         And user search the call by using following configurations:
-            | channel   | Outbound         |
-            | campaigns | outboundCampaign |
-            | agents    | Agent One        |
+            | channel   | Outbound           |
+            | campaigns | OutboundCampaign_1 |
+            | agents    | Agent One          |
         And validate that the call is registered as per following configurations:
             | phoneNumber | 910261828          |
             | agentName   | Agent_1            |
@@ -91,7 +91,7 @@ Feature: Dialer Control
         When user navigate to crm
         And user search the call by using following configurations:
             | channel   | Outbound         |
-            | campaigns | outboundCampaign |
+            | campaigns | OutboundCampaign_1 |
             | agents    | Agent Two        |
         And validate that the call is registered as per following configurations:
             | phoneNumber | 910261828          |
@@ -135,7 +135,7 @@ Feature: Dialer Control
         When user navigate to crm
         And user search the call by using following configurations:
             | channel   | Outbound         |
-            | campaigns | outboundCampaign |
+            | campaigns | OutboundCampaign_1 |
             | agents    | Agent One        |
         And validate that the call is registered as per following configurations:
             | phoneNumber | 910261828          |
@@ -181,7 +181,7 @@ Feature: Dialer Control
         When user navigate to crm
         And user search the call by using following configurations:
             | channel   | Outbound         |
-            | campaigns | outboundCampaign |
+            | campaigns | OutboundCampaign_1 |
             | agents    | no               |
         And validate that the call is registered as per following configurations:
             | phoneNumber | 910261828          |
