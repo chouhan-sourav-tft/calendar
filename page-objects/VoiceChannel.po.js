@@ -1692,7 +1692,7 @@ exports.VoiceChannel = class VoiceChannel extends BaseAction {
     }
     await this.click(this.elements.voiceSubmit, type);
     //wait for agent to be ready
-    // await this.wait(5);
+    await this.wait(3);
   }
 
   /**
